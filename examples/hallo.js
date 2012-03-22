@@ -1,3 +1,4 @@
+(function() {
 
   /*
   Hallo - a rich text editing jQuery UI widget
@@ -347,8 +348,8 @@
         }
       },
       _create: function() {
-        var buttonize, buttonset, enabled, format, widget, _ref;
-        var _this = this;
+        var buttonize, buttonset, enabled, format, widget, _ref,
+          _this = this;
         widget = this;
         buttonset = jQuery("<span class=\"" + widget.widgetName + "\"></span>");
         buttonize = function(format) {
@@ -403,8 +404,8 @@
         headers: [1, 2, 3]
       },
       _create: function() {
-        var button, buttonize, buttonset, header, id, label, widget, _i, _len, _ref;
-        var _this = this;
+        var button, buttonize, buttonset, header, id, label, widget, _i, _len, _ref,
+          _this = this;
         widget = this;
         buttonset = jQuery("<span class=\"" + widget.widgetName + "\"></span>");
         id = "" + this.options.uuid + "-paragraph";
@@ -1040,8 +1041,8 @@
         uuid: ""
       },
       _create: function() {
-        var buttonize, buttonset, widget;
-        var _this = this;
+        var buttonize, buttonset, widget,
+          _this = this;
         widget = this;
         buttonset = jQuery("<span class=\"" + widget.widgetName + "\"></span>");
         buttonize = function(alignment) {
@@ -1105,8 +1106,8 @@
         }
       },
       _create: function() {
-        var buttonize, buttonset, dialog, dialogId, dialogSubmitCb, urlInput, widget;
-        var _this = this;
+        var buttonize, buttonset, dialog, dialogId, dialogSubmitCb, urlInput, widget,
+          _this = this;
         widget = this;
         dialogId = "" + this.options.uuid + "-dialog";
         dialog = jQuery("<div id=\"" + dialogId + "\"><form action=\"#\" method=\"post\" class=\"linkForm\"><input class=\"url\" type=\"text\" name=\"url\" value=\"" + this.options.defaultUrl + "\" /><input type=\"submit\" id=\"addlinkButton\" value=\"Insert\" /></form></div>");
@@ -1192,8 +1193,8 @@
         }
       },
       _create: function() {
-        var buttonize, buttonset, widget;
-        var _this = this;
+        var buttonize, buttonset, widget,
+          _this = this;
         widget = this;
         buttonset = jQuery("<span class=\"" + widget.widgetName + "\"></span>");
         buttonize = function(type, label) {
@@ -1329,8 +1330,8 @@
         uuid: ""
       },
       _create: function() {
-        var buttonize, buttonset, widget;
-        var _this = this;
+        var buttonize, buttonset, widget,
+          _this = this;
         widget = this;
         buttonset = jQuery("<span class=\"" + widget.widgetName + "\"></span>");
         buttonize = function(cmd, label) {
@@ -1389,3 +1390,5 @@
       _init: function() {}
     });
   })(jQuery);
+
+}).call(this);

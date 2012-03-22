@@ -109,6 +109,7 @@ Hallo may be freely distributed under the MIT license
             placeholder: ''
 
         _create: ->
+            console.log('lol')
             @originalContent = @getContents()
             @id = @_generateUUID()
             @_prepareToolbar()
@@ -119,9 +120,11 @@ Hallo may be freely distributed under the MIT license
                 options["editable"] = this
                 options["toolbar"] = @toolbar
                 options["uuid"] = @id
+                console.log(plugin)
                 jQuery(@element)[plugin] options
 
         _init: ->
+            console.log(@options)
             if @options.editable
                 @enable()
             else
