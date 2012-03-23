@@ -6,6 +6,7 @@
 ((jQuery) ->
     # convert RGB to Hex
     RGBtoHex = (r, g, b) ->
+        console.log(r,g,b)
         hex = (x) ->
             ("0" + parseInt(x).toString(16)).slice(-2)
 
@@ -19,6 +20,9 @@
             toolbar: null
             uuid: ""
             imageSrc: '/editor/js/libs/hallo/img/colorwheel.png'
+            canvas:
+                width: 100
+                height: 100
 
         # Build the colorpicker using a canvas
         # Based around http://nerderg.com/Canvas+Color+Picker
@@ -26,7 +30,7 @@
             widget = this
 
             # create a canvas, load colorwheel onto it
-            canvas = jQuery("<canvas />")
+            canvas = jQuery("<canvas width='#{@options.canvas.width}' height='#{@options.canvas.height}' />")
             ctx = canvas.get(0).getContext('2d')
             img = new Image()
             img.src = @options.imageSrc
@@ -69,17 +73,18 @@
                 console.log arguments
                 widget.options.editable.restoreSelection(widget.lastSelection)
                 widget.options.editable.execute 'foreColor', hex
+                widget.colorPickerInput.val hex
 
         # Create the dialog the colorpicker will sit in
         _makeDialog: ->
             widget = this
-            @dialog = jQuery("<div class='hallodropdown' />").hide().css('position', 'absolute')
+            @dialog = jQuery("<div class='hallodropdown #{widget.name}' />").hide().css('position', 'absolute')
                 .append(@colorpicker)
                 .append(@colorPickerInput)
                 .appendTo('body') # TODO: find somewhere better to put this
 
             # Make dialog hide on hallo deactivated
-            @options.editable.element.bind "hallounselected", ->
+            @options.editable.element.bind "hallounselected halloselected hallodeactivated", ->
                 widget._closeDialog()
 
 
@@ -92,8 +97,16 @@
             position = label.offset()
             height = label.height()
             position.top += height
-
             @dialog.css position
+
+            # Fill input with current colour
+            color = document.queryCommandValue('foreColor')
+            rgb = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
+            console.log rgb
+            color = RGBtoHex.apply @, rgb.splice(1)
+             
+            @colorPickerInput.val '#' + color
+
             @dialog.toggle()
 
 
