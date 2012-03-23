@@ -36,7 +36,7 @@
             @colorpicker = canvas
 
             # bind the click event to emit a colorchanged event
-            canvas.on 'click', (evt) ->
+            canvas.on 'mousedown', (evt) ->
                 # get position of click relative to canvas
                 {left, top} = canvas.offset()
                 {pageX, pageY} = evt
@@ -50,17 +50,41 @@
                 hex = RGBtoHex i[0], i[1], i[2]
 
                 # Trigger color change event
-                #canvas.trigger('colorChange', [hex])
-                console.log widget.options.editable
-                widget.options.editable.execute 'foreColor', '#' + hex
+                console.log(widget.button)
+                widget.button.trigger 'colorChange', ['#' + hex]
+                #widget.options.editable.execute 'foreColor', '#' + hex
 
 
+        _buildInput: ->
+            widget = this
+            input = jQuery('<input type="text" />')
+                .on('keyup', ->
+                    widget.button.trigger 'colorChange', input.val()
+                )
+            @colorPickerInput = input
+
+        _observeColorChange: ->
+            widget = this
+            @button.on 'colorChange', (evt, hex) ->
+                console.log arguments
+                widget.options.editable.restoreSelection(widget.lastSelection)
+                widget.options.editable.execute 'foreColor', hex
 
         # Create the dialog the colorpicker will sit in
         _makeDialog: ->
-            @dialog = jQuery("<div />").hide().css('position', 'absolute')
+            widget = this
+            @dialog = jQuery("<div class='hallodropdown' />").hide().css('position', 'absolute')
                 .append(@colorpicker)
+                .append(@colorPickerInput)
                 .appendTo('body') # TODO: find somewhere better to put this
+
+            # Make dialog hide on hallo deactivated
+            @options.editable.element.bind "hallounselected", ->
+                widget._closeDialog()
+
+
+        _closeDialog: ->
+            @_toggleDialog() unless @dialog.is(':hidden')
 
         _toggleDialog: ->
             # Move dialog to be below button
@@ -86,16 +110,23 @@
                 buttonset.append button
 
                 button.bind "change", (event) ->
+                    # Save the last selection as we may lose focus
+                    widget.lastSelection = widget.options.editable.getSelection()
                     widget._toggleDialog()
 
                 @button = button
 
-            # Init colorpicker
-            @_buildColorpicker()
-            @_makeDialog()
-
             # Set up button
             buttonize()
+
+            # Init colorpicker
+            @_buildColorpicker()
+            @_buildInput()
+            @_makeDialog()
+
+            # Set up colorchange observer
+            @_observeColorChange()
+
             buttonset.buttonset()
             @options.toolbar.append buttonset
 
